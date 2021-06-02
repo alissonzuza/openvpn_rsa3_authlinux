@@ -6,3 +6,5 @@ The user will pass the data to the script when requested, so that it configures 
 
 Com esse script e possível criar  um openvpn server , com chave RSA3 , usando autenticação do próprio linux.
 O usuário ira repassar os dados para o script ao ser solicitar , para que configure as entradas de Estado , Cidade , Unidade Organizacional.
+
+TESTE
