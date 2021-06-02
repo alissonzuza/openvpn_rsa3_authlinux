@@ -1,1 +1,1 @@
-# openvpn_rsa3_authlinux
+# Openvpn Server Script with RSA3 Authenticated on Linux 
