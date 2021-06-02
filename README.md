@@ -2,6 +2,7 @@
 RSA3 - v3.0.8
 
 English (GOOGLE TRANSLATE)
+
 With this script it is possible to create an openvpn server, with RSA3  key, using linux authentication.
 The user will pass the data to the script upon request, so that it configures the entries of State, City, Organizational Unit, company name.
 
