@@ -1,0 +1,144 @@
+#!/bin/bash
+######################
+## GLOBAL VARIABLES ##
+######################
+rsatar=$(wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz -O easyrsa3.tgz)
+ovpnfolder=/etc/openvpn/easyrsa3
+rsa=/etc/openvpn/easyrsa3/easyrsa
+pki=/etc/openvpn/easyrsa3/pki
+loginstall=install.log
+
+###############
+## FUNCTIONS ##
+###############
+## folderovpn - Validate if the folder exists, if not it creates and copies the contents of rsa3 to the folder inside openvpn
+## folderovpn - Validar se existe a pasta , se não existe ele cria e copia o conteudo da rsa3 para a pasta dentro da openvpn
+##
+## createvars - It will create the vars file from the information passed on by the user such as: id, province, city, organization name and email for support 
+## createvars - Ele vai criar o arquivo vars a partir das informações repassadas pelo usuário como: id,provincia,cidade,nome da organização e email para suporte
+##
+## process - Validate that the vars folder and file exist, if they exist skips the process and if they do not, create the vars folder and file 
+## process - Validar se a pasta e o arquivo vars existem , se existirem pula o processo e caso não existam criam a pasta e o arquivo vars
+
+folderovpn(){
+	cd /etc/openvpn
+	$rsatar
+	tar -zxvf easyrsa3.tgz
+	mv EasyRSA-3.0.8 easyrsa3	
+	chown -R root:root easyrsa3
+}
+
+
+createvars(){
+echo "Inform the Country ID. Examplo BR"
+read id
+
+echo "Inform the Province"
+read province
+
+echo "Inform the City"
+read city
+
+echo "Organization name"
+read orgname
+
+echo "Support Email"
+read emailsup
+
+
+cat <<EOF > $ovpnfolder/vars
+set_var EASYRSA                 "$PWD"
+set_var EASYRSA_PKI             "$ovpnfolder/pki"
+set_var EASYRSA_DN              "cn_only"
+set_var EASYRSA_REQ_COUNTRY     "$id"
+set_var EASYRSA_REQ_PROVINCE    "$province"
+set_var EASYRSA_REQ_CITY        "$city"
+set_var EASYRSA_REQ_ORG         "$orgname CERTIFICATE AUTHORITY"
+set_var EASYRSA_REQ_EMAIL       "$emailsup"
+set_var EASYRSA_REQ_OU          "$orgname EASY CA"
+set_var EASYRSA_KEY_SIZE        2048
+set_var EASYRSA_ALGO            rsa
+set_var EASYRSA_CA_EXPIRE       7500
+set_var EASYRSA_CERT_EXPIRE     3650
+set_var EASYRSA_NS_SUPPORT      "no"
+set_var EASYRSA_NS_COMMENT      "$orgname CERTIFICATE AUTHORITY"
+set_var EASYRSA_EXT_DIR         "$ovpnfolder/x509-types"
+set_var EASYRSA_SSL_CONF        "$ovpnfolder/openssl-easyrsa.cnf"
+set_var EASYRSA_DIGEST          "sha256"
+EOF
+
+chmod +x $ovpnfolder/vars
+}
+
+
+
+serverfiles(){
+$rsa init-pki
+$rsa build-ca nopass
+$rsa gen-dh
+$rsa gen-crl
+cp $ovpnfolder/openssl-easyrsa.cnf $ovpnfolder/pki/safessl-easyrsa.cnf
+
+}
+
+serverconf(){
+echo "Enter the name of the ovpn server and client. Example nomecliente-local"
+read clientname
+
+$rsa gen-req server-$clientname nopass
+$rsa sign-req server server-$clientname
+
+openssl verify -CAfile $pki/ca.crt $pki/issued/server-$clientname.crt
+
+$rsa gen-req client-$clientname nopass
+$rsa sign-req client client-$clientname 
+
+openssl verify -CAfile $pki/ca.crt $pki/issued/client-$clientname.crt
+
+}
+
+
+
+
+process() {
+
+if [  -d "$ovpnfolder" ]; then
+        echo -e "Directory '$ovpnfolder' already exists \n" >> $loginstall
+else
+        folderovpn
+fi
+
+
+if [ -f "$ovpnfolder/vars" ]; then
+        echo -e "File '$ovpnfolder/vars' already exists \n" >> $loginstall
+else
+        createvars
+fi
+
+#if [ -d "$pki" ] || [ -f "$pki/ca.crt" ] || [ -f "$pki/crl.pem" ] || [ -f "$pki/dh.pem"]; then
+#        echo -e "Directory '$pki' already exists \n" >> $loginstall
+#	echo -e "File 'ca.crt,crl.pem,dh.pem' already exists \n" >> $loginstall
+#else
+#        serverfiles
+#fi
+#
+}
+
+
+## PRE-REQUISITS ##
+yum install epel-release -y > $loginstall
+
+echo >> $loginstall
+
+## INSTALL ##
+yum install openvpn easy-rsa >> $loginstall
+
+echo >> $loginstall
+
+## PROCESS ##
+process
+
+## SERVER ##
+serverfiles
+serverconf
+
