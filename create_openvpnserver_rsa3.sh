@@ -131,7 +131,7 @@ yum install epel-release -y > $loginstall
 echo >> $loginstall
 
 ## INSTALL ##
-yum install openvpn easy-rsa >> $loginstall
+yum install openvpn >> $loginstall
 
 echo >> $loginstall
 
