@@ -126,7 +126,7 @@ fi
 
 
 ## PRE-REQUISITS ##
-yum install epel-release wget -y > $loginstall
+yum install epel-release wget tar -y > $loginstall
 
 echo >> $loginstall
 
