@@ -131,7 +131,7 @@ yum install epel-release -y > $loginstall
 echo >> $loginstall
 
 ## INSTALL ##
-yum install openvpn >> $loginstall
+yum install openvpn  wget -y >> $loginstall
 
 echo >> $loginstall
 
