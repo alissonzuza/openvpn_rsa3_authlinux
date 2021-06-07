@@ -2,7 +2,7 @@
 ######################
 ## GLOBAL VARIABLES ##
 ######################
-rsatar=$(wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz -O easyrsa3.tgz)
+rsatar=https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.8/EasyRSA-3.0.8.tgz
 ovpnfolder=/etc/openvpn/easyrsa3
 rsa=/etc/openvpn/easyrsa3/easyrsa
 pki=/etc/openvpn/easyrsa3/pki
@@ -22,7 +22,7 @@ loginstall=install.log
 
 folderovpn(){
 	cd /etc/openvpn
-	$rsatar
+	wget $rsatar -O easyrsa3.tgz
 	tar -zxvf easyrsa3.tgz
 	mv EasyRSA-3.0.8 easyrsa3	
 	chown -R root:root easyrsa3
