@@ -126,12 +126,12 @@ fi
 
 
 ## PRE-REQUISITS ##
-yum install epel-release -y > $loginstall
+yum install epel-release wget -y > $loginstall
 
 echo >> $loginstall
 
 ## INSTALL ##
-yum install openvpn  wget -y >> $loginstall
+yum install openvpn  -y >> $loginstall
 
 echo >> $loginstall
 
