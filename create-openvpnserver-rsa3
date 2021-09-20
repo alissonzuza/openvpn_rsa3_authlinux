@@ -115,13 +115,6 @@ else
         createvars
 fi
 
-#if [ -d "$pki" ] || [ -f "$pki/ca.crt" ] || [ -f "$pki/crl.pem" ] || [ -f "$pki/dh.pem"]; then
-#        echo -e "Directory '$pki' already exists \n" >> $loginstall
-#	echo -e "File 'ca.crt,crl.pem,dh.pem' already exists \n" >> $loginstall
-#else
-#        serverfiles
-#fi
-#
 }
 
 
