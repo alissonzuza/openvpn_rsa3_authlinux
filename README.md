@@ -10,3 +10,6 @@ Portuguese Brazil
 
 Com esse script e possível criar  um openvpn server , com chave RSA3 , usando autenticação do próprio linux.
 O usuário ira repassar os dados para o script ao ser solicitado , para que configure as entradas de Estado , Cidade , Unidade Organizacional, nome da empresa.
+
+Pendências
+- Melhorias para gerar automáticamente server.ovpn e client.ovpn
