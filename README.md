@@ -7,3 +7,4 @@ O usuário ira repassar os dados para o script ao ser solicitado , para que conf
 Pendências
 - Melhorias para gerar automáticamente server.ovpn e client.ovpn
 - Atualizar versão do RSA e adicionar novos paramêtros e variáveis GLOBAIS
+- Melhorias na estrutura de pasta
